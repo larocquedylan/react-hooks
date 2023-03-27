@@ -10,50 +10,48 @@ import {
   PokemonForm,
   fetchPokemon,
   PokemonDataView,
-  PokemonErrorBoundary,
   PokemonInfoFallback,
 } from '../pokemon'
-
-function errorBoundary(error) {
-  return (
-    <div role="alert">
-      There was an error:{' '}
-      <pre style={{whiteSpace: 'normal'}}>{error.message}</pre>
-    </div>
-  )
-}
 
 function PokemonInfo({pokemonName}) {
   const [pokemon, setPokemon] = React.useState(null)
   const [error, setError] = React.useState(null)
+  // set status state
+  const [status, setStatus] = React.useState('idle')
 
   React.useEffect(() => {
     if (!pokemonName) {
       return
     }
-
+    setStatus('pending')
     setPokemon(pokemon => null)
-
     fetchPokemon(pokemonName)
       .then(res => {
         setPokemon(res)
         console.log(res)
+        setStatus('resolved')
       })
-
       .catch(err => {
         console.log(err)
         setError(err)
+        setStatus('rejected')
       })
   }, [pokemonName])
 
-  if (!pokemonName) {
+  // render ui based on status
+  if (status === 'idle') {
     return 'Submit a pokemon'
-  } else if (pokemonName && !pokemon) {
+  } else if (status === 'pending') {
     return <PokemonInfoFallback name={pokemonName} />
-  } else if (pokemon) {
+  } else if (status === 'rejected') {
+    return (
+      <div role="alert">
+        There was an error:{' '}
+        <pre style={{whiteSpace: 'normal'}}>{error.message}</pre>
+      </div>
+    )
+  } else if (status === 'resolved') {
     return <PokemonDataView pokemon={pokemon} />
-  } else if (error) {
-    return <PokemonErrorBoundary error={error} />
   }
 }
 
