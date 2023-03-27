@@ -46,6 +46,15 @@ function PokemonInfo({pokemonName}) {
       })
   }, [pokemonName])
 
+  if (error) {
+    return (
+      <div role="alert">
+        There was an error:{' '}
+        <pre style={{whiteSpace: 'normal'}}>{error.message}</pre>
+      </div>
+    )
+  }
+
   if (!pokemonName) {
     return 'Submit a pokemon'
   } else if (pokemonName && !pokemon) {
