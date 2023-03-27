@@ -3,7 +3,7 @@
 
 import * as React from 'react'
 
-function Name({name, onNameChange}) {
+function Name() {
   const [name, setName] = React.useState('')
   return (
     <div>
@@ -33,6 +33,7 @@ function Display({name, animal}) {
 
 function App() {
   const [animal, setAnimal] = React.useState('')
+  const [name, setName] = React.useState('')
   return (
     <form>
       <Name />
