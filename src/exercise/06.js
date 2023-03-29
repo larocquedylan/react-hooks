@@ -14,27 +14,50 @@ import {
 } from '../pokemon'
 
 function PokemonInfo({pokemonName}) {
-  const [pokemon, setPokemon] = React.useState(null)
-  const [error, setError] = React.useState(null)
-  // set status state
-  const [status, setStatus] = React.useState('idle')
+  // const [pokemon, setPokemon] = React.useState(null)
+  // const [error, setError] = React.useState(null)
+  // // set status state
+  // const [status, setStatus] = React.useState('idle')
+
+  // put state in an object
+  const [state, setState] = React.useState({
+    pokemon: null,
+    error: null,
+    status: 'idle',
+  })
+  const {pokemon, error, status} = state
+
+  // React.useEffect(() => {
+  //   if (!pokemonName) {
+  //     return
+  //   }
+  //   // setStatus('pending')
+  //   // setPokemon(pokemon => null)
+  //   fetchPokemon(pokemonName)
+  //     .then(res => {
+  //       // setPokemon(res)
+  //       // console.log(res)
+  //       // setStatus('resolved')
+  //     })
+  //     .catch(err => {
+  //       // console.log(err)
+  //       // setError(err)
+  //       // setStatus('rejected')
+  //     })
+  // }, [pokemonName])
 
   React.useEffect(() => {
     if (!pokemonName) {
       return
     }
-    setStatus('pending')
-    setPokemon(pokemon => null)
+    // Update the state object with the new pokemon value
+    setState(prevState => ({...prevState, pokemon: null, status: 'pending'}))
     fetchPokemon(pokemonName)
       .then(res => {
-        setPokemon(res)
-        console.log(res)
-        setStatus('resolved')
+        setState({pokemon: res, status: 'resolved'})
       })
       .catch(err => {
-        console.log(err)
-        setError(err)
-        setStatus('rejected')
+        setState({error: err, status: 'rejected'})
       })
   }, [pokemonName])
 
